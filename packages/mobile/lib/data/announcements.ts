@@ -1,0 +1,42 @@
+import type { Announcement } from './types';
+
+export const ANNOUNCEMENTS: Announcement[] = [
+  {
+    id: 'a1',
+    pinned: true,
+    cat: 'IT',
+    catTone: 'blue',
+    title: 'VPN maintenance window — Thu 8–10pm',
+    body: 'Networking is rotating certificates on the primary VPN concentrator Thursday night. Remote access will drop intermittently between 8 and 10pm ET. Office connectivity is unaffected. Save your work before you head out.',
+    author: 'Dana Whitfield',
+    role: 'IT Operations',
+    time: '2h ago',
+    reactions: 12,
+    comments: 4,
+  },
+  {
+    id: 'a2',
+    cat: 'People',
+    catTone: 'purple',
+    title: 'Q3 stipend reset is April 1',
+    body: 'Your wellness, learning, and home-office budgets reset at the start of next quarter. Anything unspent does not roll over — get those requests into Stipend Tracker before Mar 31.',
+    author: 'Priya Anand',
+    role: 'People Ops',
+    time: 'Yesterday',
+    reactions: 28,
+    comments: 9,
+    link: { tab: 'you', label: 'Open Stipend Tracker', icon: 'wallet' },
+  },
+  {
+    id: 'a3',
+    cat: 'Facilities',
+    catTone: 'orange',
+    title: 'New badge readers at the east entrance',
+    body: 'The east entrance now uses the upgraded badge readers. Tap and hold for a full second. If your badge does not work, Security at the front desk can re-encode it on the spot.',
+    author: 'Marcus Bell',
+    role: 'Facilities',
+    time: 'Mon',
+    reactions: 7,
+    comments: 2,
+  },
+];

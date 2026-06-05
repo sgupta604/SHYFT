@@ -7,8 +7,8 @@
 | Field | Value |
 |-------|-------|
 | Feature | commons-app |
-| Phase | research (starting) |
-| Next | `/research commons-app` |
+| Phase | plan-complete |
+| Next | `/implement commons-app` |
 | Branch | feat/commons-app (created at /implement) |
 
 **Context:** First feature. Demo on physical iPhone via Expo Go TODAY. Decisions: `docs/DECISIONS.md`. Design source: `docs/design/clarity-shyft-design-system/`.
