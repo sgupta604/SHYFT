@@ -20,7 +20,7 @@
 
 | Feature | Date | PR |
 |---------|------|----|
-| commons-app | 2026-06-05 | (see PR after push) |
+| commons-app | 2026-06-05 | https://github.com/sgupta604/SHYFT/pull/1 |
 
 ## Parked
 
