@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   metricValue: {
     fontFamily: fonts.sora600,
     fontSize: 26,
-    lineHeight: 26,
+    lineHeight: 32,
     letterSpacing: -0.52,
     color: colors.white,
     fontVariant: ['tabular-nums'],
