@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   left: { flexDirection: 'row', alignItems: 'center', gap: space[3], minWidth: 0, flexShrink: 1 },
-  mark: { width: 34, height: 34 },
+  mark: { width: 44, height: 44 },
   titles: { flexShrink: 1, minWidth: 0 },
   title: { fontFamily: fonts.sora600, fontSize: 21, letterSpacing: -0.21, color: colors.text },
   subtitle: { fontFamily: fonts.inter400, fontSize: 12, color: colors.textSubtle, marginTop: 3 },
