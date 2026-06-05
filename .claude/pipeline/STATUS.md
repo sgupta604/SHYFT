@@ -6,12 +6,9 @@
 
 | Field | Value |
 |-------|-------|
-| Feature | commons-app |
-| Phase | plan-complete |
-| Next | `/implement commons-app` |
-| Branch | feat/commons-app (created at /implement) |
-
-**Context:** First feature. Demo on physical iPhone via Expo Go TODAY. Decisions: `docs/DECISIONS.md`. Design source: `docs/design/clarity-shyft-design-system/`.
+| Feature | — |
+| Phase | — |
+| Next | — |
 
 ## Queue
 
@@ -23,7 +20,7 @@
 
 | Feature | Date | PR |
 |---------|------|----|
-| - | - | - |
+| commons-app | 2026-06-05 | (see PR after push) |
 
 ## Parked
 
