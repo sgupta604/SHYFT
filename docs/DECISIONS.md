@@ -24,7 +24,7 @@ Decisions from the kickoff grilling session, 2026-06-05. The pipeline agents
 | State | Zustand stores (single source of truth) | Pipeline convention; also the seam for future API + plugins |
 | Language | TypeScript, strict | Pipeline convention |
 | Layout | pnpm workspace, app at `packages/mobile/` | Room for `packages/shared` (plugin SDK) and `packages/api` later |
-| Module structure | `app/` routes only · `features/<tab>/` self-contained modules · `components/` shared primitives · `lib/` theme/stores/data | **Plugin requirement:** Shyft engineers will eventually build plugins (own screens/cards). Feature modules registered into the shell from day one — no monolith. |
+| Module structure | `app/` routes only · `features/<tab>/` self-contained modules · `components/` shared primitives · `lib/` theme/stores/data | **Plugin ecosystem is THE selling point** (elevated 2026-06-05): internal plugin app store where Shyft engineers build plugins and employees add/update them. Feature modules registered into the shell from day one — no monolith. |
 
 ## Data & backend
 
@@ -32,6 +32,22 @@ Decisions from the kickoff grilling session, 2026-06-05. The pipeline agents
   `data.jsx`, owned by Zustand stores. No persistence (no AsyncStorage) yet.
 - Later list: FastAPI backend + auth, persistence, push notifications,
   plugin SDK, Maestro E2E, EAS standalone builds.
+
+## Plugin ecosystem roadmap (the selling point — agreed 2026-06-05)
+
+1. **Phase 1 (now):** compile-time plugins. A plugin = one self-contained
+   `features/<name>/` folder + one `lib/registry.ts` manifest entry, via PR.
+2. **Phase 2 (the "plugin app store"):** all approved plugins ship in the
+   bundle; the registry becomes dynamic (config/API-driven per-user
+   enable/disable); in-app Plugin Store screen to browse/add/remove;
+   updates delivered OTA via `expo-updates` — no App Store releases.
+3. **Phase 3 (only if Phase 2 stops scaling):** true runtime JS bundle
+   loading (Re.Pack / module federation) — needs sandboxing + security
+   review pipeline. Deferred deliberately.
+
+**Hard constraint:** plugins can only use JS + native modules already shipped
+in the app. New native capabilities require a full release — the core app
+should grow a curated native-capability set over time.
 
 ## Assets
 
