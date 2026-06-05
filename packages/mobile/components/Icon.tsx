@@ -47,7 +47,6 @@ export function Icon({
     | undefined;
   if (!Cmp) {
     if (__DEV__) {
-      // eslint-disable-next-line no-console
       console.warn(`[Icon] unknown lucide icon: "${name}" -> "${resolved}"`);
     }
     const Fallback = Lucide.Square;

@@ -10,7 +10,6 @@ import { colors } from '@/lib/theme/colors';
 import { radii, space } from '@/lib/theme/spacing';
 import { fonts } from '@/lib/theme/type';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const S2_MARK = require('@/assets/s2-mark.png');
 
 export type AppHeaderProps = {
