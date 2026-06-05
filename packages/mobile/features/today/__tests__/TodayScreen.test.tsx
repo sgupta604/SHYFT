@@ -1,19 +1,26 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TodayScreen } from '../TodayScreen';
 import { useEventsStore } from '@/lib/stores/events';
 import { useKudosStore } from '@/lib/stores/kudos';
+import { usePluginsStore } from '@/lib/stores/plugins';
 import { EVENTS } from '@/lib/data/events';
 import { KUDOS } from '@/lib/data/kudos';
+import { PLUGINS } from '@/lib/data/plugins';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
   router: { push: (...args: unknown[]) => mockPush(...args) },
+  useRouter: () => ({ push: (...args: unknown[]) => mockPush(...args), back: jest.fn() }),
 }));
 
 const reset = () => {
   useEventsStore.setState({ events: EVENTS.map((e) => ({ ...e })) });
   useKudosStore.setState({ kudos: KUDOS.map((k) => ({ ...k })) });
+  usePluginsStore.setState({
+    installed: PLUGINS.filter((p) => p.installed).map((p) => p.id),
+    showWidgets: true,
+  });
   mockPush.mockClear();
 };
 
@@ -75,6 +82,20 @@ describe('TodayScreen', () => {
     expect(k1.cheered).toBe(true);
     expect(k1.cheers).toBe(17);
     expect(screen.getByText('17')).toBeTruthy();
+  });
+
+  it('renders the installed today-slot plugin widget, and removes it on uninstall', async () => {
+    await renderScreen();
+    // Shuttle Tracker is a default-installed today-slot plugin.
+    expect(screen.getByText('Shuttle Tracker')).toBeTruthy();
+    expect(screen.getByText('YOUR APPS')).toBeTruthy();
+
+    // Uninstall both today plugins -> the slot disappears.
+    await act(async () => {
+      usePluginsStore.setState({ installed: ['pl-401k', 'pl-volunteer'] });
+    });
+    expect(screen.queryByText('Shuttle Tracker')).toBeNull();
+    expect(screen.queryByText('YOUR APPS')).toBeNull();
   });
 
   it('opens the all-kudos sheet from "See all"', async () => {

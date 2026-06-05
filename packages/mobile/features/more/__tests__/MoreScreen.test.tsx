@@ -3,14 +3,22 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MoreScreen } from '../MoreScreen';
 import { useOnboardingStore } from '@/lib/stores/onboarding';
 import { ONBOARDING } from '@/lib/data/onboarding';
+import { usePluginsStore } from '@/lib/stores/plugins';
+import { PLUGINS } from '@/lib/data/plugins';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush, back: jest.fn() }),
 }));
 
-const reset = () =>
+const reset = () => {
   useOnboardingStore.setState({ checklist: ONBOARDING.checklist.map((c) => ({ ...c })) });
+  usePluginsStore.setState({
+    installed: PLUGINS.filter((p) => p.installed).map((p) => p.id),
+    developer: true,
+    showWidgets: true,
+  });
+};
 
 const renderScreen = () =>
   render(
@@ -73,5 +81,43 @@ describe('MoreScreen', () => {
     await renderScreen();
     await fireEvent.press(screen.getByText('Your first day'));
     expect(mockPush).toHaveBeenCalledWith('/onboarding');
+  });
+
+  it('shows the Apps row with a live installed count and pushes /apps', async () => {
+    await renderScreen();
+    expect(screen.getByText('APPS & EXTENSIONS')).toBeTruthy();
+    expect(screen.getByText('Apps')).toBeTruthy();
+    // 4 plugins seed installed:true
+    expect(screen.getByText('4 installed')).toBeTruthy();
+    await fireEvent.press(screen.getByText('Apps'));
+    expect(mockPush).toHaveBeenCalledWith('/apps');
+  });
+
+  it('updates the Apps installed count live from the store', async () => {
+    usePluginsStore.getState().toggleInstall('pl-shuttle'); // remove one -> 3
+    await renderScreen();
+    expect(screen.getByText('3 installed')).toBeTruthy();
+  });
+
+  it('hides the Developer row when the developer flag is off', async () => {
+    usePluginsStore.setState({ developer: false });
+    await renderScreen();
+    expect(screen.queryByText('Developer')).toBeNull();
+  });
+
+  it('shows the Developer row and pushes /developer when developer is on', async () => {
+    usePluginsStore.setState({ developer: true });
+    await renderScreen();
+    expect(screen.getByText('Developer')).toBeTruthy();
+    await fireEvent.press(screen.getByText('Developer'));
+    expect(mockPush).toHaveBeenCalledWith('/developer');
+  });
+
+  it('toggles the developer flag via the Developer-mode switch', async () => {
+    usePluginsStore.setState({ developer: true });
+    await renderScreen();
+    const sw = screen.getByTestId('developer-mode-switch');
+    await fireEvent(sw, 'valueChange', false);
+    expect(usePluginsStore.getState().developer).toBe(false);
   });
 });

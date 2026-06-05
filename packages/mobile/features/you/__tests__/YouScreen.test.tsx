@@ -1,8 +1,10 @@
-import { render, fireEvent, screen } from '@testing-library/react-native';
+import { act, render, fireEvent, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { YouScreen } from '../YouScreen';
 import { useEventsStore } from '@/lib/stores/events';
+import { usePluginsStore } from '@/lib/stores/plugins';
 import { EVENTS } from '@/lib/data/events';
+import { PLUGINS } from '@/lib/data/plugins';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -24,6 +26,10 @@ describe('YouScreen', () => {
   beforeEach(() => {
     mockPush.mockClear();
     useEventsStore.setState({ events: EVENTS.map((e) => ({ ...e })) });
+    usePluginsStore.setState({
+      installed: PLUGINS.filter((p) => p.installed).map((p) => p.id),
+      showWidgets: true,
+    });
   });
 
   it('renders without throwing and shows the section headers', async () => {
@@ -48,7 +54,8 @@ describe('YouScreen', () => {
 
   it('shows the PTO snapshot with remaining days', async () => {
     await renderScreen();
-    expect(screen.getByText('14')).toBeTruthy();
+    // "14" also appears in the Volunteer Hours progress widget (used: 14), so allow >1.
+    expect(screen.getAllByText('14').length).toBeGreaterThan(0);
     expect(screen.getByText('Request time off')).toBeTruthy();
   });
 
@@ -70,5 +77,19 @@ describe('YouScreen', () => {
     const going = EVENTS.find((e) => e.rsvp === 'going')!;
     await renderScreen();
     expect(screen.getByText(going.title)).toBeTruthy();
+  });
+
+  it('renders the installed you-slot plugin widget, and removes it on uninstall', async () => {
+    await renderScreen();
+    // 401(k) Snapshot is a default-installed you-slot plugin.
+    expect(screen.getByText('401(k) Snapshot')).toBeTruthy();
+    expect(screen.getByText('YOUR APPS')).toBeTruthy();
+
+    // Uninstall both you plugins -> the slot disappears.
+    await act(async () => {
+      usePluginsStore.setState({ installed: ['pl-shuttle', 'pl-lunch'] });
+    });
+    expect(screen.queryByText('401(k) Snapshot')).toBeNull();
+    expect(screen.queryByText('YOUR APPS')).toBeNull();
   });
 });
