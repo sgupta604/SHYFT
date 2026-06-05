@@ -56,6 +56,7 @@ export default function RootLayout() {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="stipend/[id]" />
       <Stack.Screen name="apps" />
+      <Stack.Screen name="developer" />
       <Stack.Screen name="person/[id]" />
       <Stack.Screen name="onboarding" />
     </Stack>
