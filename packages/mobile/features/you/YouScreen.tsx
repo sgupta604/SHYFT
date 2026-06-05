@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   eventRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   eventDivider: { borderBottomWidth: 1, borderBottomColor: colors.border },
   dateBlock: { width: 40, alignItems: 'center' },
-  dateDay: { fontFamily: fonts.sora600, fontSize: 15, lineHeight: 15, color: colors.accent },
+  dateDay: { fontFamily: fonts.sora600, fontSize: 15, lineHeight: 19, color: colors.accent },
   dateMonth: {
     ...type.caption11,
     fontSize: 10.5,

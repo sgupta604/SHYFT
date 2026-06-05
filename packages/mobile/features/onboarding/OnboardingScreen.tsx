@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   countdownNum: {
     fontFamily: fonts.sora600,
     fontSize: 44,
-    lineHeight: 44,
+    lineHeight: 55,
     letterSpacing: -0.88,
     color: colors.white,
     fontVariant: ['tabular-nums'],

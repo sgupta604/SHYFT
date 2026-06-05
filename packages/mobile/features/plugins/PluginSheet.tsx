@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   stat: { flex: 1, alignItems: 'center' },
   statDivider: { borderLeftWidth: 1, borderLeftColor: colors.border },
-  statValue: { fontFamily: fonts.sora600, fontSize: 15, lineHeight: 15, color: colors.text },
+  statValue: { fontFamily: fonts.sora600, fontSize: 15, lineHeight: 19, color: colors.text },
   statLabel: { fontFamily: fonts.inter400, fontSize: 11, color: colors.textSubtle, marginTop: 3 },
 
   blurb: { fontFamily: fonts.inter400, fontSize: 14, lineHeight: 22, color: colors.textMuted },
