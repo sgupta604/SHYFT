@@ -31,15 +31,21 @@ function RequestTimeOffSheet({ pto, onClose }) {
   );
 }
 
-function CommonsApp() {
+function CommonsApp({ tweaks = {} }) {
+  const developer = tweaks.developer !== false;   // role-gated dev surfaces
+  const showWidgets = tweaks.showWidgets !== false; // plugin slots on Today/You
+
   const [tab, setTab] = useState('today');
   const [events, setEvents] = useState(window.EVENTS);
   const [kudos, setKudos] = useState(window.KUDOS);
   const [checklist, setChecklist] = useState(window.ONBOARDING.checklist);
+  const [installed, setInstalled] = useState(window.PLUGINS.filter(p => p.installed).map(p => p.id));
   const [sheet, setSheet] = useState(null);
   const [onboarding, setOnboarding] = useState(false);
   const [stipend, setStipend] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [apps, setApps] = useState(false);
+  const [devOpen, setDevOpen] = useState(false);
 
   const onRSVP = (id) => setEvents(es => es.map(e => e.id === id
     ? { ...e, rsvp: e.rsvp === 'going' ? null : 'going', going: e.rsvp === 'going' ? e.going - 1 : e.going + 1 } : e));
@@ -47,6 +53,12 @@ function CommonsApp() {
     ? { ...k, cheered: !k.cheered, cheers: k.cheered ? k.cheers - 1 : k.cheers + 1 } : k));
   const onToggle = (id) => setChecklist(cl => cl.map(c => c.id === id ? { ...c, done: !c.done } : c));
   const onDeepLink = (link) => { if (link && link.tab) setTab(link.tab); };
+  const onTogglePlugin = (id) => setInstalled(xs => xs.includes(id) ? xs.filter(x => x !== id) : [...xs, id]);
+
+  const slotFor = (slot) => showWidgets ? (
+    <PluginSlot slot={slot} plugins={window.PLUGINS} installed={installed}
+      onManage={() => setApps(true)} onOpenPlugin={p => setSheet({ type: 'plugin', data: p })} />
+  ) : null;
 
   const HEADERS = {
     today:  { title: 'Good morning, Alex', subtitle: 'Tuesday · March 25', mark: true, search: false },
@@ -62,18 +74,21 @@ function CommonsApp() {
     announcements={window.ANNOUNCEMENTS} events={events} kudos={kudos}
     status={window.OFFICE_STATUS} weather={window.WEATHER} out={window.OUT_TODAY}
     onOpenAnnouncement={a => setSheet({ type: 'ann', data: a })} onDeepLink={onDeepLink}
-    onRSVP={onRSVP} onCheer={onCheer} onSeeAllKudos={() => setSheet({ type: 'allKudos' })} goTab={setTab} />;
+    onRSVP={onRSVP} onCheer={onCheer} onSeeAllKudos={() => setSheet({ type: 'allKudos' })}
+    pluginSlot={slotFor('today')} goTab={setTab} />;
   else if (tab === 'events') screen = <EventsScreen events={events} onRSVP={onRSVP} onOpen={e => setSheet({ type: 'event', id: e.id })} />;
   else if (tab === 'you') screen = <YouScreen
     stipends={window.STIPENDS} pto={window.PTO} perks={window.PERKS} events={events}
     onOpenStipend={s => setStipend(s)} onRequestPto={() => setSheet({ type: 'pto' })}
-    onOpenPerk={() => {}} onOpenEvent={e => setSheet({ type: 'event', id: e.id })} goTab={setTab} />;
+    onOpenPerk={() => {}} onOpenEvent={e => setSheet({ type: 'event', id: e.id })}
+    pluginSlot={slotFor('you')} goTab={setTab} />;
   else if (tab === 'people') screen = <PeopleScreen
     people={window.PEOPLE} out={window.OUT_TODAY} holidays={window.HOLIDAYS}
     onOpenProfile={p => setProfile(p)} />;
   else if (tab === 'more') screen = <MoreScreen
     onboarding={window.ONBOARDING} channels={window.CHANNELS} forsale={window.FORSALE}
-    onOpenOnboarding={() => setOnboarding(true)} />;
+    isDeveloper={developer} onOpenOnboarding={() => setOnboarding(true)}
+    onOpenApps={() => setApps(true)} onOpenDeveloper={() => setDevOpen(true)} />;
 
   const sheetEvent = sheet && sheet.type === 'event' ? events.find(e => e.id === sheet.id) : null;
 
@@ -88,12 +103,18 @@ function CommonsApp() {
       {onboarding && <OnboardingScreen onboarding={window.ONBOARDING} checklist={checklist} onToggle={onToggle} onClose={() => setOnboarding(false)} />}
       {stipend && <StipendDetailScreen s={stipend} onClose={() => setStipend(null)} />}
       {profile && <ProfileScreen p={profile} onClose={() => setProfile(null)} />}
+      {apps && <AppsScreen plugins={window.PLUGINS} installed={installed} categories={window.PLUGIN_CATEGORIES}
+        isDeveloper={developer} onClose={() => setApps(false)} onToggle={onTogglePlugin}
+        onOpenPlugin={p => setSheet({ type: 'plugin', data: p })}
+        onOpenDeveloper={() => { if (developer) { setApps(false); setDevOpen(true); } }} />}
+      {developer && devOpen && <DeveloperScreen devPlugins={window.DEV_PLUGINS} statusTone={window.DEV_STATUS_TONE} onClose={() => setDevOpen(false)} />}
 
       {sheet && sheet.type === 'ann' && <AnnouncementSheet a={sheet.data} onClose={() => setSheet(null)} />}
       {sheetEvent && <EventSheet e={sheetEvent} onRSVP={onRSVP} onClose={() => setSheet(null)} />}
       {sheet && sheet.type === 'notif' && <NotificationsSheet onClose={() => setSheet(null)} />}
       {sheet && sheet.type === 'allKudos' && <AllKudosSheet kudos={kudos} onCheer={onCheer} onClose={() => setSheet(null)} />}
       {sheet && sheet.type === 'pto' && <RequestTimeOffSheet pto={window.PTO} onClose={() => setSheet(null)} />}
+      {sheet && sheet.type === 'plugin' && <PluginSheet p={sheet.data} isInstalled={installed.includes(sheet.data.id)} onToggle={onTogglePlugin} onClose={() => setSheet(null)} />}
     </div>
   );
 }

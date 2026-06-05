@@ -2,7 +2,7 @@
    Commons UI kit — Today (home / backbone)
    ============================================================ */
 
-function TodayScreen({ announcements, events, kudos, status, weather, out, onOpenAnnouncement, onDeepLink, onRSVP, onCheer, onSeeAllKudos, goTab }) {
+function TodayScreen({ announcements, events, kudos, status, weather, out, onOpenAnnouncement, onDeepLink, onRSVP, onCheer, onSeeAllKudos, pluginSlot, goTab }) {
   const nextEvent = events[0];
   return (
     <div className="c-scroll">
@@ -22,6 +22,8 @@ function TodayScreen({ announcements, events, kudos, status, weather, out, onOpe
 
       <SectionHeader title="Coming up" action="All events" onAction={() => goTab('events')} />
       <EventCard e={nextEvent} onRSVP={onRSVP} onOpen={() => goTab('events')} />
+
+      {pluginSlot}
 
       <SectionHeader title="Recent kudos" action="See all" onAction={onSeeAllKudos} />
       <KudosCard k={kudos[0]} onCheer={onCheer} />
