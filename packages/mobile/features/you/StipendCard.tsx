@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   remaining: {
     fontFamily: fonts.sora600,
     fontSize: 19,
-    lineHeight: 19,
+    lineHeight: 24,
     color: colors.text,
     fontVariant: ['tabular-nums'],
   },

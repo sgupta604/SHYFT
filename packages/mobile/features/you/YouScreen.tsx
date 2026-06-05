@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   ptoNum: {
     fontFamily: fonts.sora600,
     fontSize: 30,
-    lineHeight: 30,
+    lineHeight: 37,
     letterSpacing: -0.6,
     color: colors.text,
     fontVariant: ['tabular-nums'],

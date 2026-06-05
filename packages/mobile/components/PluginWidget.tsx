@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
 
   // next
   nextRow: { flexDirection: 'row', alignItems: 'baseline', gap: space[2] },
-  nextValue: { fontFamily: fonts.sora600, fontSize: 26, lineHeight: 26, letterSpacing: -0.52 },
+  nextValue: { fontFamily: fonts.sora600, fontSize: 26, lineHeight: 32, letterSpacing: -0.52 },
   nextUnit: { fontFamily: fonts.inter400, fontSize: 12, color: colors.textSubtle },
   spacer: { flex: 1 },
   nextRight: { alignItems: 'flex-end' },
@@ -183,13 +183,13 @@ const styles = StyleSheet.create({
 
   // stat
   statRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  statValue: { fontFamily: fonts.sora600, fontSize: 24, lineHeight: 24, letterSpacing: -0.48, color: colors.text },
+  statValue: { fontFamily: fonts.sora600, fontSize: 24, lineHeight: 30, letterSpacing: -0.48, color: colors.text },
   statLabel: { fontFamily: fonts.inter400, fontSize: 11, color: colors.textSubtle, marginTop: 3 },
 
   // progress
   progressTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 },
   progressUsedRow: { flexDirection: 'row', alignItems: 'baseline', gap: 5 },
-  progressUsed: { fontFamily: fonts.sora600, fontSize: 20, lineHeight: 20, color: colors.text },
+  progressUsed: { fontFamily: fonts.sora600, fontSize: 20, lineHeight: 25, color: colors.text },
   progressOf: { fontFamily: fonts.inter400, fontSize: 11, color: colors.textSubtle },
   progressLabel: { fontFamily: fonts.inter400, fontSize: 11, color: colors.textSubtle },
   progressTrack: { height: 6, borderRadius: 9999, overflow: 'hidden' },
