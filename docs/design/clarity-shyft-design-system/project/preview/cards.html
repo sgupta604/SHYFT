@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{font-family:var(--font-ui);background:var(--bg);padding:24px;color:var(--text);display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start}
+  .card{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--shadow-1);overflow:hidden}
+  .ch{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
+  .ch h3{font:600 15px/1 var(--font-display);margin:0;color:var(--text)}
+  .ch a{font:500 12.5px/1 var(--font-ui);color:var(--accent);text-decoration:none}
+  .cb{padding:16px 18px;font:400 13.5px/1.55 var(--font-ui);color:var(--text-muted)}
+  .action{padding:18px}
+  .ico{width:44px;height:44px;border-radius:var(--r-lg);background:var(--green-300);display:flex;align-items:center;justify-content:center;font-size:22px}
+  .at{font:600 15px/1.2 var(--font-display);margin:12px 0 2px;color:var(--text)}
+  .ad{font:400 12px/1.3 var(--font-ui);color:var(--text-subtle)}
+  .bar{height:6px;background:var(--bg-sunken);border-radius:var(--r-full);margin-top:14px;overflow:hidden}
+  .bar i{display:block;height:100%;width:40%;background:var(--accent);border-radius:var(--r-full)}
+  .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+  .amt{font:500 13px/1 var(--font-mono);color:var(--text)}
+  .pct{font:500 12px/1 var(--font-mono);color:var(--text-subtle)}
+</style></head>
+<body>
+  <div class="card">
+    <div class="ch"><h3>Content card</h3><a href="#">View all</a></div>
+    <div class="cb">With a sticky header, body, and actions. The body uses 20px padding by default; the header hairline is charcoal-100.</div>
+  </div>
+  <div class="card action">
+    <div class="ico">🏋️</div>
+    <div class="at">Wellness &amp; Fitness</div>
+    <div class="ad">Gym, classes, meditation apps · Non-tax</div>
+    <div class="row"><span class="amt">$600 annual</span><span class="pct">40%</span></div>
+    <div class="bar"><i></i></div>
+  </div>
+</body></html>

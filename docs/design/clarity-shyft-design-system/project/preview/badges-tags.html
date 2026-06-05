@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{font-family:var(--font-ui);background:var(--bg-elev);padding:22px 24px;color:var(--text)}
+  .grp{margin-bottom:16px}
+  .grp:last-child{margin-bottom:0}
+  .h{font:500 10.5px/1 var(--font-ui);text-transform:uppercase;letter-spacing:.06em;color:var(--text-subtle);margin-bottom:10px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pill{font:600 11.5px/1 var(--font-ui);padding:5px 11px;border-radius:var(--r-full);display:inline-flex;align-items:center;gap:6px}
+  .dot{width:6px;height:6px;border-radius:50%}
+  .tag{font:500 12px/1 var(--font-ui);padding:6px 11px;border-radius:var(--r-sm);background:var(--bg-subtle);color:var(--text-muted);display:inline-flex;align-items:center;gap:6px}
+  .neutral{font:500 11.5px/1 var(--font-mono);padding:6px 10px;border-radius:var(--r-sm);background:var(--bg-subtle);color:var(--text-muted)}
+</style></head>
+<body>
+  <div class="grp"><div class="h">Status pills · one piece of state</div>
+    <div class="row">
+      <span class="pill" style="background:var(--orange-300);color:var(--orange-700)"><span class="dot" style="background:var(--orange-700)"></span>Pending</span>
+      <span class="pill" style="background:var(--green-300);color:var(--green-700)"><span class="dot" style="background:var(--green-700)"></span>Approved</span>
+      <span class="pill" style="background:var(--blue-100);color:var(--blue-800)"><span class="dot" style="background:var(--blue-700)"></span>Completed</span>
+      <span class="pill" style="background:var(--pink-300);color:var(--pink-700)"><span class="dot" style="background:var(--pink-700)"></span>Denied</span>
+    </div>
+  </div>
+  <div class="grp"><div class="h">Category tags · single leading emoji glyph</div>
+    <div class="row">
+      <span class="tag">📚 Learning</span><span class="tag">🏋️ Wellness</span><span class="tag">🖥️ Equipment</span><span class="tag">📡 Internet</span><span class="tag">🧠 Mental Health</span><span class="tag">🤝 Team</span>
+    </div>
+  </div>
+  <div class="grp"><div class="h">Neutral tags · metadata</div>
+    <div class="row"><span class="neutral">REQ-5031</span><span class="neutral">Taxable</span><span class="neutral">receipt.pdf</span></div>
+  </div>
+</body></html>

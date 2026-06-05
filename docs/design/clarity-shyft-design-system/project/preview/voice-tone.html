@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{font-family:var(--font-ui);background:var(--bg-elev);padding:20px 24px;color:var(--text);display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .h{font:500 10.5px/1 var(--font-ui);text-transform:uppercase;letter-spacing:.06em;margin:0 0 12px;display:flex;align-items:center;gap:7px}
+  .do .h{color:var(--success)}.dont .h{color:var(--danger)}
+  ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  li{font:400 13px/1.4 var(--font-ui);padding-left:20px;position:relative;color:var(--text)}
+  li::before{position:absolute;left:0;top:0;font-weight:700}
+  .do li::before{content:"✓";color:var(--success)}
+  .dont li{color:var(--text-muted)}
+  .dont li::before{content:"✕";color:var(--danger)}
+</style></head>
+<body>
+  <div class="do">
+    <h4 class="h">Do — useful before friendly</h4>
+    <ul>
+      <li>“Submit request”</li>
+      <li>“9 awaiting decision”</li>
+      <li>“Over your remaining budget”</li>
+      <li>“Reset Apr 1, 2027”</li>
+      <li>“Nothing here yet — when someone submits a request, it'll show up here.”</li>
+    </ul>
+  </div>
+  <div class="dont">
+    <h4 class="h">Don't — hype, apology, noise</h4>
+    <ul>
+      <li>“Submit Your Awesome Request! ✨”</li>
+      <li>“You have 9 pending items that need your attention”</li>
+      <li>“Oops! That's over budget 😬”</li>
+      <li>“Resets on April 1st, 2027 at 12:00 AM UTC”</li>
+      <li>“No requests found. Please try a different filter.”</li>
+    </ul>
+  </div>
+</body></html>

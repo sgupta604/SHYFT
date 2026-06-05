@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{font-family:var(--font-ui);background:var(--bg-elev);padding:22px 24px;color:var(--text)}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start}
+  label{display:block;font:500 12.5px/1 var(--font-ui);color:var(--text);margin-bottom:6px}
+  .inp{width:100%;box-sizing:border-box;height:38px;border:1px solid var(--border-strong);border-radius:var(--r-md);background:var(--bg-elev);padding:0 12px;font:400 13.5px/1 var(--font-ui);color:var(--text)}
+  .inp.focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--focus-ring)}
+  .ph{color:var(--text-subtle)}
+  .prefix{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--r-md);overflow:hidden}
+  .prefix span{padding:0 11px;background:var(--bg-subtle);color:var(--text-subtle);font:500 13.5px/38px var(--font-mono);border-right:1px solid var(--border)}
+  .prefix input{border:0;outline:0;flex:1;padding:0 12px;font:500 13.5px/1 var(--font-mono);color:var(--text);min-width:0}
+  .seg{display:inline-flex;background:var(--bg-subtle);border-radius:var(--r-md);padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;font:500 12.5px/1 var(--font-ui);color:var(--text-muted);padding:7px 14px;border-radius:7px;cursor:pointer}
+  .seg button.on{background:var(--bg-elev);color:var(--text);box-shadow:var(--shadow-1)}
+</style></head>
+<body>
+  <div class="grid">
+    <div><label>Text input</label><input class="inp" placeholder="Describe the expense"></div>
+    <div><label>Amount (prefix)</label><div class="prefix"><span>$</span><input value="349.00"></div></div>
+    <div><label>Focused</label><input class="inp focus" value="Monthly yoga membership"></div>
+  </div>
+  <div style="margin-top:18px"><label>Segmented control</label>
+    <div class="seg"><button class="on">All</button><button>Pending</button><button>Approved</button><button>Denied</button></div>
+    <span style="font:400 11.5px/1 var(--font-ui);color:var(--text-subtle);margin-left:14px">38px tall · 3px focus ring @ accent / 22%</span>
+  </div>
+</body></html>

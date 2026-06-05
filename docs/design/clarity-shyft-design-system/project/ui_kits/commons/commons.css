@@ -1,0 +1,171 @@
+/* ============================================================
+   Commons — Shyft employee app · UI-kit styles
+   Layered on top of ../../colors_and_type.css tokens.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+.commons {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  font-family: var(--font-ui);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* lucide icons render currentColor strokes */
+.cl-ico { display: inline-flex; line-height: 0; color: inherit; flex: none; }
+.cl-ico svg { width: 100%; height: 100%; }
+
+/* ---------- App header ---------- */
+.c-header {
+  flex: none;
+  padding: 56px 20px 12px;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 5;
+}
+.c-header .c-h-title { font: 600 21px/1.1 var(--font-display); letter-spacing: -0.01em; }
+.c-header .c-h-sub { font: 400 12px/1.2 var(--font-ui); color: var(--text-subtle); margin-top: 3px; }
+.c-iconbtn {
+  width: 38px; height: 38px; border-radius: var(--r-full);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-subtle); color: var(--text-muted); border: none; cursor: pointer;
+  position: relative; flex: none;
+}
+.c-iconbtn .c-dot {
+  position: absolute; top: 7px; right: 8px; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--danger); border: 2px solid var(--bg-elev);
+}
+
+/* ---------- Scroll area ---------- */
+.c-scroll {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: 16px 16px 96px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.c-scroll > * { flex-shrink: 0; }
+.c-scroll::-webkit-scrollbar { width: 0; }
+
+/* ---------- Section header ---------- */
+.c-section { display: flex; align-items: center; justify-content: space-between; margin: 4px 2px 0; }
+.c-section h3 { font: 600 13px/1 var(--font-ui); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-subtle); margin: 0; }
+.c-section a { font: 500 12.5px/1 var(--font-ui); color: var(--accent); text-decoration: none; cursor: pointer; }
+
+/* ---------- Card ---------- */
+.c-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-1);
+}
+.c-card.pad { padding: var(--s-5); }
+.c-card.tap { cursor: pointer; transition: box-shadow .14s ease, transform .14s ease; }
+.c-card.tap:active { transform: scale(.992); box-shadow: var(--shadow-2); }
+
+/* ---------- Pills / tags ---------- */
+.c-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: 600 11px/1 var(--font-ui); padding: 5px 9px; border-radius: var(--r-full);
+}
+.c-pill .pdot { width: 6px; height: 6px; border-radius: 50%; }
+.c-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font: 500 12px/1 var(--font-ui); padding: 6px 10px; border-radius: var(--r-sm);
+  background: var(--bg-subtle); color: var(--text-muted);
+}
+
+/* ---------- Avatar ---------- */
+.c-avatar {
+  border-radius: var(--r-full); flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui); font-weight: 600; color: #fff;
+  background: var(--charcoal-400); overflow: hidden;
+}
+
+/* ---------- Icon tile ---------- */
+.c-tile {
+  border-radius: var(--r-lg); flex: none;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---------- Buttons ---------- */
+.c-btn {
+  font: 600 14px/1 var(--font-ui); border-radius: var(--r-md);
+  border: 1px solid transparent; height: 40px; padding: 0 16px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  cursor: pointer; transition: background .14s ease, border-color .14s ease;
+}
+.c-btn.primary { background: var(--accent); color: #fff; }
+.c-btn.primary:active { background: var(--accent-hover); }
+.c-btn.secondary { background: var(--bg-elev); color: var(--text); border-color: var(--border-strong); }
+.c-btn.secondary:active { background: var(--bg-subtle); }
+.c-btn.ghost { background: transparent; color: var(--accent); }
+.c-btn.block { width: 100%; }
+.c-btn.sm { height: 32px; font-size: 12.5px; padding: 0 12px; }
+
+/* ---------- Bottom tab bar ---------- */
+.c-tabbar {
+  flex: none; position: absolute; bottom: 0; left: 0; right: 0; z-index: 40;
+  background: rgba(255,255,255,0.88);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 8px 8px 26px;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
+}
+.c-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 6px 2px; border: none; background: transparent; cursor: pointer;
+  color: var(--text-subtle); border-radius: var(--r-md);
+}
+.c-tab .c-tab-l { font: 500 10px/1 var(--font-ui); letter-spacing: .01em; }
+.c-tab.on { color: var(--accent); }
+
+/* ---------- Status banner ---------- */
+.c-banner {
+  display: flex; align-items: flex-start; gap: 11px;
+  border-radius: var(--r-lg); padding: 13px 14px;
+  border: 1px solid;
+}
+.c-banner .b-body { flex: 1; }
+.c-banner .b-title { font: 600 13.5px/1.3 var(--font-ui); }
+.c-banner .b-text { font: 400 12.5px/1.4 var(--font-ui); margin-top: 2px; }
+
+/* ---------- Misc ---------- */
+.c-meta { font: 400 12px/1.4 var(--font-ui); color: var(--text-subtle); }
+.c-num { font-family: var(--font-mono); font-feature-settings: "tnum" 1; }
+.c-divider { height: 1px; background: var(--border); }
+.c-row { display: flex; align-items: center; gap: 12px; }
+.hairsep { border-top: 1px solid var(--border); }
+
+/* sheet / detail overlay */
+.c-sheet-scrim {
+  position: absolute; inset: 0; z-index: 60;
+  background: rgba(33,37,41,.36);
+  -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px);
+  display: flex; align-items: flex-end;
+  animation: c-fade .18s ease;
+}
+.c-sheet {
+  background: var(--bg); width: 100%; max-height: 88%;
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: c-rise .22s cubic-bezier(.22,1,.36,1);
+}
+.c-sheet-grab { width: 38px; height: 5px; border-radius: 99px; background: var(--charcoal-200); margin: 10px auto 4px; flex: none; }
+@keyframes c-fade { from { opacity: 0; } }
+@keyframes c-rise { from { transform: translateY(18px); opacity: .6; } }
+
+/* segmented control */
+.c-seg { display: inline-flex; background: var(--bg-subtle); border-radius: var(--r-md); padding: 3px; gap: 2px; width: 100%; }
+.c-seg button { flex: 1; border: 0; background: transparent; font: 500 12.5px/1 var(--font-ui); color: var(--text-muted); padding: 8px 0; border-radius: 7px; cursor: pointer; }
+.c-seg button.on { background: var(--bg-elev); color: var(--text); box-shadow: var(--shadow-1); }
