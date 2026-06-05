@@ -4,6 +4,7 @@ node_modules/
 dist/
 build/
 .turbo/
+coverage/
 *.log
 .DS_Store
 .env
