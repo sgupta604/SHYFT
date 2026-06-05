@@ -91,7 +91,7 @@ function MyEventRow({ e, onOpen, last }) {
   );
 }
 
-function YouScreen({ stipends, pto, perks, events, onOpenStipend, onRequestPto, onOpenPerk, onOpenEvent, goTab }) {
+function YouScreen({ stipends, pto, perks, events, onOpenStipend, onRequestPto, onOpenPerk, onOpenEvent, pluginSlot, goTab }) {
   const mine = events.filter(e => e.rsvp === 'going');
   return (
     <div className="c-scroll">
@@ -105,6 +105,8 @@ function YouScreen({ stipends, pto, perks, events, onOpenStipend, onRequestPto, 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         {perks.map(p => <PerkTile key={p.id} p={p} onOpen={() => onOpenPerk(p)} />)}
       </div>
+
+      {pluginSlot}
 
       <SectionHeader title="My events" action="All events" onAction={() => goTab('events')} />
       {mine.length === 0 ? (

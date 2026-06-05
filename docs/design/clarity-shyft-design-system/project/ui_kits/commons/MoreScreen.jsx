@@ -21,7 +21,7 @@ function MoreLinkRow({ icon, tone, title, sub, trailing, onClick, last }) {
   );
 }
 
-function MoreScreen({ onboarding, channels, forsale, onOpenOnboarding }) {
+function MoreScreen({ onboarding, channels, forsale, isDeveloper, onOpenOnboarding, onOpenApps, onOpenDeveloper }) {
   return (
     <div className="c-scroll">
       {/* Preboarding entry — kept here by request */}
@@ -40,6 +40,18 @@ function MoreScreen({ onboarding, channels, forsale, onOpenOnboarding }) {
           <Icon name="circle-check" size={15} color="var(--success)" />
           <span className="c-meta">2 of {onboarding.checklist.length} onboarding steps done</span>
         </div>
+      </div>
+
+      {/* Apps & extensions — plugin directory (everyone) + role-gated dev console */}
+      <SectionHeader title="Apps & extensions" />
+      <div className="c-card pad" style={{ paddingTop: 2, paddingBottom: 2 }}>
+        <MoreLinkRow icon="layout-grid" tone="blue" title="Apps" sub="Browse plugins built by teams across Shyft"
+          onClick={onOpenApps} last={!isDeveloper} />
+        {isDeveloper && (
+          <MoreLinkRow icon="code-xml" tone="purple" title="Developer" sub="Build, publish & manage your plugins"
+            trailing={<span className="c-row" style={{ gap: 7 }}><Pill tone="neutral" dot={false}>Dev</Pill><Icon name="chevron-right" size={18} color="var(--text-subtle)" /></span>}
+            onClick={onOpenDeveloper} last />
+        )}
       </div>
 
       {/* Slack channels — discovery directory */}

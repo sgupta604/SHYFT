@@ -11,6 +11,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/Icon';
 import { Pill } from '@/components/Pill';
+import { PluginSlot } from '@/components/PluginSlot';
 import { SectionHeader } from '@/components/SectionHeader';
 import { PERKS } from '@/lib/data/perks';
 import { PTO } from '@/lib/data/misc';
@@ -127,6 +128,8 @@ export function YouScreen() {
             ))}
           </Card>
         )}
+
+        <PluginSlot slot="you" />
       </ScrollView>
 
       <RequestTimeOffSheet visible={ptoOpen} onClose={() => setPtoOpen(false)} />
@@ -148,7 +151,7 @@ const styles = StyleSheet.create({
   ptoNum: {
     fontFamily: fonts.sora600,
     fontSize: 30,
-    lineHeight: 30,
+    lineHeight: 37,
     letterSpacing: -0.6,
     color: colors.text,
     fontVariant: ['tabular-nums'],

@@ -20,6 +20,7 @@ import { OutRow } from './OutRow';
 import { WeatherCard } from './WeatherCard';
 import { Card } from '@/components/Card';
 import { EventCard } from '@/components/EventCard';
+import { PluginSlot } from '@/components/PluginSlot';
 import { SectionHeader } from '@/components/SectionHeader';
 import { StatusBanner } from '@/components/StatusBanner';
 import { useEventsStore } from '@/lib/stores/events';
@@ -99,6 +100,8 @@ export function TodayScreen() {
         {nextEvent ? (
           <EventCard event={nextEvent} onRsvp={toggleRsvp} onOpen={() => goTab('events')} />
         ) : null}
+
+        <PluginSlot slot="today" />
 
         <SectionHeader title="Recent kudos" action="See all" onAction={() => setKudosOpen(true)} />
         {latestKudo ? <KudosCard kudo={latestKudo} onCheer={toggleCheer} /> : null}

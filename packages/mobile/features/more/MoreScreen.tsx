@@ -6,18 +6,20 @@
  * The hero footer's "N of 5 onboarding steps done" is DERIVED from the
  * onboarding store, so checking items in /onboarding updates it live.
  */
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/Icon';
 import { IconTile } from '@/components/IconTile';
+import { Pill } from '@/components/Pill';
 import { SectionHeader } from '@/components/SectionHeader';
 import { CHANNELS } from '@/lib/data/channels';
 import { FORSALE } from '@/lib/data/forsale';
 import { ONBOARDING } from '@/lib/data/onboarding';
 import type { ForSaleItem } from '@/lib/data/types';
 import { selectDoneCount, useOnboardingStore } from '@/lib/stores/onboarding';
+import { selectInstalledCount, usePluginsStore } from '@/lib/stores/plugins';
 import { scale, colors, type Tone } from '@/lib/theme/colors';
 import { radii, space } from '@/lib/theme/spacing';
 import { fonts, type } from '@/lib/theme/type';
@@ -94,10 +96,55 @@ function ShortcutRow({
   );
 }
 
+function AppRow({
+  icon,
+  tone,
+  title,
+  sub,
+  onPress,
+  pill,
+  last,
+}: {
+  icon: string;
+  tone: ShortcutTone;
+  title: string;
+  sub: string;
+  onPress: () => void;
+  pill?: boolean;
+  last?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.linkRow, !last && styles.divider, pressed && styles.pressed]}
+    >
+      <IconTile icon={icon} bg={scale[tone][300]} fg={scale[tone][700]} size={38} />
+      <View style={styles.linkText}>
+        <Text style={styles.linkTitle}>{title}</Text>
+        <Text style={[styles.meta, { marginTop: 2 }]}>{sub}</Text>
+      </View>
+      {pill ? (
+        <View style={styles.trailing}>
+          <Pill tone="neutral" dot={false}>
+            Dev
+          </Pill>
+          <Icon name="chevron-right" size={18} color={colors.textSubtle} />
+        </View>
+      ) : (
+        <Icon name="chevron-right" size={18} color={colors.textSubtle} />
+      )}
+    </Pressable>
+  );
+}
+
 export function MoreScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const done = useOnboardingStore(selectDoneCount);
+  const installedCount = usePluginsStore(selectInstalledCount);
+  const developer = usePluginsStore((s) => s.developer);
+  const setDeveloper = usePluginsStore((s) => s.setDeveloper);
 
   return (
     <View style={styles.root}>
@@ -107,6 +154,29 @@ export function MoreScreen() {
         showsVerticalScrollIndicator={false}
       >
         <FirstDayCard done={done} onPress={() => router.push('/onboarding')} />
+
+        <SectionHeader title="Apps & extensions" />
+        <Card style={styles.listCard}>
+          <AppRow
+            icon="layout-grid"
+            tone="blue"
+            title="Apps"
+            sub={`${installedCount} installed`}
+            onPress={() => router.push('/apps')}
+            last={!developer}
+          />
+          {developer ? (
+            <AppRow
+              icon="code-xml"
+              tone="purple"
+              title="Developer"
+              sub="Build, publish & manage your plugins"
+              onPress={() => router.push('/developer')}
+              pill
+              last
+            />
+          ) : null}
+        </Card>
 
         <SectionHeader title="Slack channels" action="Browse all" />
         <Card style={styles.listCard}>
@@ -145,8 +215,26 @@ export function MoreScreen() {
             title="Help & FAQ"
             sub="Get answers, contact People Ops"
             trailing="chevron-right"
-            last
           />
+          <View style={styles.linkRow}>
+            <IconTile
+              icon="code-xml"
+              bg={scale.purple[300]}
+              fg={scale.purple[700]}
+              size={38}
+            />
+            <View style={styles.linkText}>
+              <Text style={styles.linkTitle}>Developer mode</Text>
+              <Text style={[styles.meta, { marginTop: 2 }]}>Show the developer console</Text>
+            </View>
+            <Switch
+              testID="developer-mode-switch"
+              value={developer}
+              onValueChange={setDeveloper}
+              trackColor={{ true: colors.accent, false: scale.charcoal[300] }}
+              thumbColor={colors.white}
+            />
+          </View>
         </Card>
       </ScrollView>
     </View>
@@ -205,6 +293,8 @@ const styles = StyleSheet.create({
   linkRow: { flexDirection: 'row', alignItems: 'center', gap: 13, paddingVertical: 13 },
   linkText: { flex: 1, minWidth: 0 },
   linkTitle: { fontFamily: fonts.inter600, fontSize: 13.5, lineHeight: 16, color: colors.text },
+  trailing: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  pressed: { opacity: 0.6 },
 });
 
 export default MoreScreen;
