@@ -14,7 +14,7 @@
 
 | Feature | Priority | Notes |
 |---------|----------|-------|
-| - | - | - |
+| backend-api | high | FastAPI in packages/api per Shyft standards (see memory + https://portal.internal.shyftsolutions.io/docs). Research must resolve FIRST: native-mobile auth precedent (portal JWT is web-BFF-only → likely OIDC PKCE vs Authentik) + internal-vs-public reachability (preboarding needs public). Roles user/developer/admin via /.well-known/app-roles → replaces dev-mode switch. Add root justfile (just-standard compliance). Supersede DECISIONS.md "Railway" deploy with podman/EC2 infra. |
 
 ## Completed
 
