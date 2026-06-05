@@ -47,12 +47,17 @@ export function AppHeader({
       </View>
       <View style={styles.actions}>
         {onSearch ? (
-          <Pressable style={styles.iconBtn} onPress={onSearch} accessibilityRole="button" accessibilityLabel="Search">
+          <Pressable
+            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+            onPress={onSearch}
+            accessibilityRole="button"
+            accessibilityLabel="Search"
+          >
             <Icon name="search" size={18} color={colors.textMuted} />
           </Pressable>
         ) : null}
         <Pressable
-          style={styles.iconBtn}
+          style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
           onPress={onBell}
           accessibilityRole="button"
           accessibilityLabel="Notifications"
@@ -91,6 +96,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.bgSubtle,
   },
+  iconBtnPressed: { backgroundColor: colors.bgSunken },
   dot: {
     position: 'absolute',
     top: 7,
