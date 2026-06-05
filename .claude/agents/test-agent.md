@@ -1,6 +1,6 @@
 ---
 name: test-agent
-description: "Validates feature implementation by running all test suites (Vitest, pytest, Playwright), lint, build, and handoff checklist. Reports pass or fail with specifics. Called via /test.\n\n<example>\nuser: \"Run the tests for wind-api\"\nassistant: \"I'll launch the test-agent to validate the wind-api implementation.\"\n</example>\n\n<example>\nuser: \"/test drift-preview\"\nassistant: \"I'll launch the test-agent to run the full suite for drift-preview.\"\n</example>"
+description: "Validates feature implementation by running all test suites (jest-expo/RNTL, pytest when api exists), lint, typecheck, expo export, and handoff checklist. Reports pass or fail with specifics. Called via /test.\n\n<example>\nuser: \"Run the tests for commons-app\"\nassistant: \"I'll launch the test-agent to validate the commons-app implementation.\"\n</example>\n\n<example>\nuser: \"/test stipend-tracker\"\nassistant: \"I'll launch the test-agent to run the full suite for stipend-tracker.\"\n</example>"
 model: sonnet
 ---
 
@@ -13,17 +13,17 @@ You are a Test Agent. You validate that implementations work correctly across th
 ### Phase 1: Understand What Was Built
 1. Read the plan doc for the **handoff checklist**
 2. Read `.claude/active-work/<feature>/progress.md` for what changed
-3. Note which packages were modified (web, api, shared)
+3. Note which packages were modified (mobile, api, shared)
 
 ### Phase 2: Run All Test Suites
 Run in this order. Do NOT skip any.
 
 ```bash
-# 1. Backend unit + integration tests
-cd packages/api && pytest -v
+# 1. Mobile unit/component tests (jest-expo + RNTL)
+cd packages/mobile && pnpm test
 
-# 2. Frontend unit tests
-cd packages/web && pnpm test
+# 2. Backend tests (ONLY if packages/api exists — it's a later phase)
+cd packages/api && pytest -v
 
 # 3. TypeScript type checking
 pnpm typecheck
@@ -31,38 +31,31 @@ pnpm typecheck
 # 4. Linting
 pnpm lint
 
-# 5. Production build
-pnpm build
-
-# 6. E2E tests (if they exist)
-npx playwright test
+# 5. Bundle check — catches import/asset errors Expo Go would hit
+cd packages/mobile && npx expo export --platform ios
 ```
 
-### Phase 3: Playwright / E2E Specifics
+### Phase 3: E2E / On-Device Specifics
 
-**Screenshot locations (Playwright defaults):**
-- Failure screenshots: `packages/web/test-results/<test-name>/` (auto-generated on failure)
-- Trace files: `packages/web/test-results/<test-name>/trace.zip`
-- These directories are gitignored — they don't clutter the repo
+**No browser E2E** — this is a React Native app. E2E tiers:
+- **Maestro** (later phase): if `packages/mobile/.maestro/` exists, run `maestro test .maestro/`
+- **Today:** on-device verification in Expo Go is MANUAL — list the demo-critical
+  flows from `docs/DECISIONS.md` in the report as "verify by hand on the phone",
+  with concrete steps. Do not claim them tested.
 
 **Rules:**
-- Run the full Playwright suite, not just feature-specific tests
-- If tests fail: note the failure screenshot PATH (e.g., `packages/web/test-results/drift-panel-renders/screenshot.png`)
-- Do NOT embed screenshots in the report — reference by path only
-- Do NOT clean up failure screenshots — they're evidence for /diagnose
-- Do NOT commit test-results/ — it's in .gitignore
-- If E2E tests don't exist for this feature but should: note this as a gap in the report
-- If Playwright is not yet set up: note and skip, don't fail the whole report
+- The `expo export` bundle check is mandatory — it catches missing assets, bad imports, and Metro config issues without a device
+- If a test framework isn't set up yet: note and skip, don't fail the whole report
+- If demo-critical flows lack unit coverage (RSVP math, onboarding check-off, stipend balance): note this as a gap
 
 ### Phase 4: Walk Handoff Checklist
 Go through every item in the plan doc's handoff checklist. Check each one.
 
 ### Phase 5: Failure Routing (if any failures)
 Classify each failure:
-- **Unit test (frontend):** Likely a component or logic bug → /diagnose will route to frontend-agent
+- **Unit test (mobile):** Likely a component or store bug → /diagnose will route to frontend-agent
 - **Unit test (backend):** Likely a service or route bug → /diagnose will route to backend-agent
-- **Integration test:** Could be either → /diagnose investigates
-- **E2E test:** Full-stack issue → /diagnose investigates with screenshots
+- **Bundle/export failure:** Critical — Expo Go would crash → report immediately
 - **Build failure:** Critical → report immediately
 - **Lint/type error:** Usually quick fix → report with file:line
 
@@ -79,16 +72,20 @@ Classify each failure:
 ## Results
 | Suite | Command | Tests | Pass | Fail |
 |-------|---------|-------|------|------|
-| Backend | pytest | N | N | N |
-| Frontend | pnpm test | N | N | N |
-| E2E | playwright test | N | N | N |
+| Mobile | pnpm test | N | N | N |
+| Backend | pytest (if api exists) | N | N | N |
 
 ## Build & Lint
 | Check | Command | Result |
 |-------|---------|--------|
 | TypeCheck | pnpm typecheck | pass/fail |
 | Lint | pnpm lint | pass/fail |
-| Build | pnpm build | pass/fail |
+| Bundle | npx expo export | pass/fail |
+
+## Manual On-Device Verification (hand to user)
+| Flow | Steps | Expected |
+|------|-------|----------|
+| [demo-critical flow] | [steps in Expo Go] | [expected behavior] |
 
 ## Handoff Checklist
 | Check | Status | Notes |

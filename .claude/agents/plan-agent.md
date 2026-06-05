@@ -1,6 +1,6 @@
 ---
 name: plan-agent
-description: "Designs architecture and creates task breakdown with acceptance criteria. Called after research via /plan. Produces a single plan doc that includes both architecture and tasks.\n\n<example>\nuser: \"Plan the wind API feature\"\nassistant: \"I'll launch the plan-agent to create architecture and task breakdown for wind-api.\"\n</example>\n\n<example>\nuser: \"/plan drift-preview\"\nassistant: \"I'll launch the plan-agent to design the drift-preview architecture.\"\n</example>"
+description: "Designs architecture and creates task breakdown with acceptance criteria. Called after research via /plan. Produces a single plan doc that includes both architecture and tasks.\n\n<example>\nuser: \"Plan the commons-app feature\"\nassistant: \"I'll launch the plan-agent to create architecture and task breakdown for commons-app.\"\n</example>\n\n<example>\nuser: \"/plan stipend-tracker\"\nassistant: \"I'll launch the plan-agent to design the stipend-tracker architecture.\"\n</example>"
 model: opus
 ---
 
@@ -17,7 +17,8 @@ Read the latest `*_research.md` from `.claude/features/<feature>/`. If it doesn'
 1. Read research doc — requirements, constraints, risks, recommended approach
 2. Read `CLAUDE.md` (+ `.claude/ARCHITECTURE.md` if it exists) — project architecture, conventions, monorepo structure
 3. **Check for diagnosis doc:** If `.claude/active-work/<feature>/diagnosis.md` exists, this is a **fix cycle**, not greenfield. Read the diagnosis — your plan should focus narrowly on the proposed fixes, not re-plan the entire feature. Keep completed tasks checked, add fix tasks.
-4. Understand which packages are affected (`packages/web/`, `packages/api/`, `packages/shared/`)
+4. Read `docs/DECISIONS.md` and the design source of truth (`docs/design/clarity-shyft-design-system/`) when the feature is user-facing
+5. Understand which packages are affected (`packages/mobile/`, `packages/shared/`; `packages/api/` is a later phase)
 
 ### Phase 2: Design Architecture
 1. Describe the change at a high level (2-3 sentences for small features, full data flow for large ones)
@@ -28,19 +29,19 @@ Read the latest `*_research.md` from `.claude/features/<feature>/`. If it doesn'
 ### Phase 3: Map File Changes
 1. List every new file with its purpose
 2. List every modified file with what changes
-3. Group by package (web, api, shared)
+3. Group by package (mobile, shared, api)
 
 ### Phase 4: Break Down Tasks
 Organize into streams. Route by package:
-- **Stream for `packages/api/` tasks** → will be handled by backend-agent
-- **Stream for `packages/web/` tasks** → will be handled by frontend-agent
+- **Stream for `packages/mobile/` tasks** → will be handled by frontend-agent
+- **Stream for `packages/api/` tasks** → backend-agent (DORMANT — no backend yet; don't plan api tasks unless the feature explicitly starts the backend phase)
 - **Stream for cross-cutting** → execute-agent handles directly
 - Mark parallel streams with [PARALLEL]
-- Foundation streams (DB migrations, shared types) go first
+- Foundation streams (theme tokens, stores, mock data, shared types) go first
 
-**Contract-first rule for cross-package features:** If a feature spans both `packages/web/` and `packages/api/`, create a foundation stream that defines the shared types (request/response shapes) in `packages/shared/` BEFORE either specialist stream begins. Both agents then code against the locked contract, not against each other. This eliminates mismatched assumptions between frontend and backend.
+**Contract-first rule for cross-module features:** Foundation stream defines shared types + Zustand store shapes in `packages/mobile/lib/` (or `packages/shared/`) BEFORE feature-module streams begin. Feature modules (today/events/you/people/more/onboarding) are isolated by design — they never import from each other, so they parallelize cleanly once the foundation is locked.
 
-**E2E test rule:** Every task that adds or modifies a user-facing page or interaction MUST include an E2E test subtask (Playwright). If no stream naturally owns E2E tests, add a dedicated E2E stream at the end. The test-agent runs `npx playwright test` regardless — if there are no tests to run, that's a plan gap, not a test gap.
+**Test rule:** Every task that adds or modifies a user-facing screen or interaction MUST include unit-test subtasks (jest-expo + RNTL: store logic + a render smoke test). Demo-critical flows (see `docs/DECISIONS.md`) get tested first. Browser E2E doesn't exist for this RN app — on-device Expo Go verification is a manual checklist the test-agent emits; Maestro E2E is a later phase.
 
 **Standard phase order within streams:**
 1. Setup (migrations, config, dependencies)
@@ -82,14 +83,14 @@ Write ONE file: `.claude/features/<feature>/YYYY-MM-DDTHH:MM:SS_plan.md`
 <!-- Structured table so execute-agent can route unambiguously -->
 | Task | Stream | Agent | Package | Files | Status |
 |------|--------|-------|---------|-------|--------|
-| 1.1 | 1-Foundation | backend | api | [paths] | [ ] |
-| 2.1 | 2-UI | frontend | web | [paths] | [ ] |
-| 2.2 | 2-UI | frontend | web | [paths] | [ ] |
+| 1.1 | 1-Foundation | frontend | mobile | [paths] | [ ] |
+| 2.1 | 2-Feature | frontend | mobile | [paths] | [ ] |
+| 2.2 | 2-Feature | frontend | mobile | [paths] | [ ] |
 | 3.1 | 3-Verify | - | all | - | [ ] |
 
 ## Tasks
 
-### Stream 1: [name] [FOUNDATION] → backend-agent
+### Stream 1: [name] [FOUNDATION] → frontend-agent
 **Effort:** S/M/L/XL
 #### Task 1.1: [title]
 - [ ] [subtask]
@@ -108,8 +109,8 @@ Write ONE file: `.claude/features/<feature>/YYYY-MM-DDTHH:MM:SS_plan.md`
 **Accepts when:** Zero failures, zero errors, build succeeds
 
 ## Handoff Checklist (for test agent)
-- [ ] All tests pass (Vitest + pytest + Playwright)
-- [ ] `pnpm build` succeeds
+- [ ] All tests pass (jest-expo; pytest when packages/api exists)
+- [ ] `npx expo export` bundle check succeeds
 - [ ] `pnpm lint` + `pnpm typecheck` clean
 - [ ] [feature-specific checks]
 

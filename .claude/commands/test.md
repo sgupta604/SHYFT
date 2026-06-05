@@ -1,5 +1,5 @@
 ---
-description: Test a feature — spawns test-agent for full suite + Playwright + handoff checklist
+description: Test a feature — spawns test-agent for full suite (jest-expo, lint, typecheck, expo export) + handoff checklist
 ---
 
 Spawn the **test-agent** for feature: `$ARGUMENTS`
@@ -10,7 +10,7 @@ Spawn the **test-agent** for feature: `$ARGUMENTS`
 - If `.claude/active-work/$ARGUMENTS/session-log.md` exists, include it in the agent prompt for context.
 
 ## Steps
-1. Launch a test-agent: "Test feature '$ARGUMENTS'. Run pytest, Vitest, Playwright, lint, typecheck, build. Walk the handoff checklist in the plan doc. Write report to `.claude/active-work/$ARGUMENTS/`."
+1. Launch a test-agent: "Test feature '$ARGUMENTS'. Run jest-expo tests, lint, typecheck, and the `npx expo export` bundle check (plus pytest if packages/api exists). Walk the handoff checklist in the plan doc. Emit the manual Expo Go verification list for demo-critical flows. Write report to `.claude/active-work/$ARGUMENTS/`."
 2. When agent returns:
    - **PASS:** Update STATUS.md: phase=`test-pass`, next=`/finalize $ARGUMENTS`. Suggest: "Tests passed! Run `/finalize $ARGUMENTS`?"
    - **FAIL:** Update STATUS.md: phase=`test-fail`, next=`/diagnose $ARGUMENTS`. Suggest: "Tests failed. Run `/diagnose $ARGUMENTS`?"

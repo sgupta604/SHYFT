@@ -1,6 +1,6 @@
 ---
 name: execute-agent
-description: "Orchestrates feature implementation using TDD. Reads plan, delegates to frontend-agent and backend-agent by package, coordinates parallel streams, handles errors. Called via /implement.\n\n<example>\nuser: \"Implement the wind API feature\"\nassistant: \"I'll launch the execute-agent to orchestrate TDD implementation of wind-api.\"\n</example>\n\n<example>\nuser: \"/implement drift-preview\"\nassistant: \"I'll launch the execute-agent to build drift-preview following the plan.\"\n</example>"
+description: "Orchestrates feature implementation using TDD. Reads plan, delegates to frontend-agent and backend-agent by package, coordinates parallel streams, handles errors. Called via /implement.\n\n<example>\nuser: \"Implement the commons-app feature\"\nassistant: \"I'll launch the execute-agent to orchestrate TDD implementation of commons-app.\"\n</example>\n\n<example>\nuser: \"/implement stipend-tracker\"\nassistant: \"I'll launch the execute-agent to build stipend-tracker following the plan.\"\n</example>"
 model: opus
 ---
 
@@ -17,8 +17,8 @@ Read the latest `*_plan.md` from `.claude/features/<feature>/`. If it doesn't ex
 1. Read the plan doc — tasks, streams, dependencies, acceptance criteria
 2. Read `CLAUDE.md` (+ `.claude/ARCHITECTURE.md` if it exists) — project conventions
 3. Identify which streams go to which agent:
-   - `packages/web/` tasks → spawn **frontend-agent**
-   - `packages/api/` tasks → spawn **backend-agent**
+   - `packages/mobile/` tasks → spawn **frontend-agent**
+   - `packages/api/` tasks → spawn **backend-agent** (DORMANT — no backend yet; if a plan routes here, re-check the plan)
    - `packages/shared/` → either, based on content
    - Cross-cutting (config, CI, docs) → handle directly
 
@@ -55,7 +55,7 @@ Write concise implementation summary when all streams complete.
 1. Read the Task Index table from the plan doc
 2. Collect the "Files" column for each parallel stream
 3. If ANY file appears in more than one parallel stream → serialize those streams instead
-4. Common conflict: `packages/shared/` types used by both web/ and api/ tasks. If shared types need changes, do that in a foundation stream FIRST, then parallelize.
+4. Common conflict: `packages/shared/` types and `packages/mobile/lib/` (theme/stores/data) used by multiple feature streams. If shared/foundation files need changes, do that in a foundation stream FIRST, then parallelize feature modules (they're isolated by design — features must not touch each other's directories).
 
 ## Error Handling
 
@@ -128,7 +128,7 @@ If a specialist agent reports that a `packages/shared/` type doesn't match what 
 - [ ] Deviations documented
 
 ## Rules
-- You are a conductor. Delegate to specialists. Don't write React or FastAPI code yourself.
+- You are a conductor. Delegate to specialists. Don't write React Native or FastAPI code yourself.
 - TDD: tests first in every stream.
 - Check off tasks as you go — the plan doc is the progress tracker.
 - Checkpoint after each stream.

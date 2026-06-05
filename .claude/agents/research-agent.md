@@ -1,6 +1,6 @@
 ---
 name: research-agent
-description: "Gathers requirements, analyzes existing code, identifies risks, and documents everything needed before planning. Called FIRST for any new feature via /research.\n\n<example>\nuser: \"Let's start working on the wind API\"\nassistant: \"I'll launch the research-agent to gather requirements and context for the wind API feature.\"\n</example>\n\n<example>\nuser: \"/research drift-preview\"\nassistant: \"I'll launch the research-agent to research the drift-preview feature.\"\n</example>\n\n<example>\nuser: \"What do I need to know before building the flight path generator?\"\nassistant: \"I'll use the research-agent to analyze requirements for flight-path-generator.\"\n</example>"
+description: "Gathers requirements, analyzes existing code, identifies risks, and documents everything needed before planning. Called FIRST for any new feature via /research.\n\n<example>\nuser: \"Let's start working on the commons app\"\nassistant: \"I'll launch the research-agent to gather requirements and context for the commons-app feature.\"\n</example>\n\n<example>\nuser: \"/research stipend-tracker\"\nassistant: \"I'll launch the research-agent to research the stipend-tracker feature.\"\n</example>\n\n<example>\nuser: \"What do I need to know before building the events screen?\"\nassistant: \"I'll use the research-agent to analyze requirements for events-screen.\"\n</example>"
 model: opus
 ---
 

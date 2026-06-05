@@ -28,8 +28,8 @@ Architecture + task breakdown in ONE file. Tasks organized by streams with [P] m
 **Writes:** `.claude/active-work/<feature>/progress.md`, checks off tasks in plan doc
 
 Execute-agent is a **conductor**. It reads the plan, routes tasks by package:
-- `packages/web/` tasks → **frontend-agent**
-- `packages/api/` tasks → **backend-agent**
+- `packages/mobile/` tasks → **frontend-agent**
+- `packages/api/` tasks → **backend-agent** (DORMANT — no backend yet)
 - `packages/shared/` → either, based on content
 - Cross-cutting → execute-agent handles directly
 
@@ -40,9 +40,9 @@ Execute-agent is a **conductor**. It reads the plan, routes tasks by package:
 ### 4. Test → test-agent
 **Writes:** `.claude/active-work/<feature>/test-pass.md` or `test-fail.md`
 
-Runs: Vitest (frontend) + pytest (backend) + Playwright (E2E) + lint + build. Walks handoff checklist.
+Runs: jest-expo (mobile) + pytest (backend, when api exists) + typecheck + lint + `npx expo export` bundle check. Walks handoff checklist. Emits a manual on-device verification list (Expo Go) for demo-critical flows.
 
-**Playwright rules:** Save failure screenshots to Playwright's default output. Reference by path. Don't embed. Don't clean up failures — they're evidence for /diagnose.
+**E2E rules:** No browser E2E — RN app. Maestro (later phase) when `.maestro/` exists. Manual flows referenced as steps, never claimed as automated passes.
 
 **Exit gate (pass):** All suites pass, build succeeds, analyzer clean, checklist verified.
 
@@ -98,9 +98,9 @@ Sort `*_plan.md` or `*_research.md` lexicographically (ISO 8601 timestamps with 
 When CLAUDE.md exceeds 150 lines, move architecture details to `.claude/ARCHITECTURE.md` and reference it from CLAUDE.md. Keep CLAUDE.md focused on pipeline rules + essential project context.
 
 ### Commit Messages
-`feat(web): add drift preview panel`
-`fix(api): normalize Folkweather longitude`
-`test(api): add wind endpoint integration tests`
+`feat(mobile): add stipend tracker screen`
+`fix(mobile): respect safe area on Today screen`
+`test(mobile): add RSVP capacity math tests`
 
 ## File Lifecycle
 
@@ -125,9 +125,11 @@ When CLAUDE.md exceeds 150 lines, move architecture details to `.claude/ARCHITEC
 - Run full tests after merge
 - Parallel streams must not touch same files
 
-## Future: Rust Agent (Phase 3)
+## Future Phases (see docs/DECISIONS.md "later list")
 
-`packages/physics/` is a three-crate Rust workspace (drift-core, drift-python/PyO3, drift-wasm). Neither frontend-agent nor backend-agent knows Rust. Before Phase 3 begins, create `.claude/agents/rust-agent.md` covering: nalgebra, wasm-bindgen, maturin builds, PyO3 bindings, floating-point determinism, and `cargo test`. Until then, the pipeline handles Phases 1-2 fully.
+- **Backend phase:** `packages/api/` (FastAPI + auth) — remove the DORMANT notice from backend-agent.md when this begins. API contracts must match the mobile stores' mock-first seam.
+- **Plugin SDK:** `packages/shared/` — extract the feature-module registry into a plugin API for Shyft engineers.
+- **Maestro E2E**, persistence (AsyncStorage), push notifications, EAS standalone builds.
 
 ## Agent Output Rules
 1. Concise — summaries under 500 words

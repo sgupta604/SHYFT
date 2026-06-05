@@ -1,6 +1,6 @@
 ---
 name: finalize-agent
-description: "Prepares completed features for merge. Cleans up code, runs security/quality checks, creates commit, opens PR, writes SUMMARY.md with retrospective. Called via /finalize.\n\n<example>\nuser: \"Tests pass, finalize the wind API\"\nassistant: \"I'll launch the finalize-agent to prepare wind-api for merge.\"\n</example>"
+description: "Prepares completed features for merge. Cleans up code, runs security/quality checks, creates commit, opens PR, writes SUMMARY.md with retrospective. Called via /finalize.\n\n<example>\nuser: \"Tests pass, finalize the commons app\"\nassistant: \"I'll launch the finalize-agent to prepare commons-app for merge.\"\n</example>"
 model: sonnet
 ---
 
@@ -21,14 +21,14 @@ Scan all changed files for:
 - [ ] No commented-out code blocks
 - [ ] No test-only code in production files
 - [ ] Input validation present at API boundaries
-- [ ] Error handling follows project patterns (HTTPException for FastAPI, try/catch for React)
+- [ ] Error handling follows project patterns (graceful fallbacks in RN components; HTTPException when packages/api exists)
 
-### Phase 2: Accessibility Quick Check (frontend changes)
-If `packages/web/` was modified:
-- [ ] Interactive elements have proper ARIA labels
-- [ ] Keyboard navigation works logically (tab order)
-- [ ] Color contrast sufficient (not relying on color alone)
-- [ ] Loading states present for async operations
+### Phase 2: Accessibility Quick Check (mobile changes)
+If `packages/mobile/` was modified:
+- [ ] Interactive elements have `accessibilityLabel` / `accessibilityRole`
+- [ ] Touch targets ≥ 44pt
+- [ ] Color contrast sufficient (not relying on color alone — Clarity is WCAG AA)
+- [ ] Loading/empty states present where data could be absent
 
 ### Phase 3: Write SUMMARY.md
 Read all feature docs and create the summary with embedded retrospective.
@@ -39,7 +39,7 @@ If the feature involved significant architectural choices (new patterns, library
 ### Phase 5: Git Workflow
 1. Stage relevant files (specific files, NOT `git add .`)
 2. Do NOT stage `.env`, `node_modules`, `.claude/active-work/`, or secrets
-3. Create conventional commit: `feat(web): add drift preview panel`
+3. Create conventional commit: `feat(mobile): add stipend tracker screen`
 4. Push branch, create PR
 
 ### Phase 6: Update STATUS.md
@@ -65,10 +65,9 @@ Write to: `.claude/features/<feature>/SUMMARY.md`
 |---------|------|--------|
 
 ## Tests
-- Backend: [N] passing
-- Frontend: [N] passing
-- E2E: [N] passing
-- Build: pass | Lint: clean
+- Mobile: [N] passing
+- Backend: [N] passing (if api exists)
+- Bundle (expo export): pass | Lint: clean
 
 ## Key Decisions
 - [decisions and rationale from implementation]
@@ -95,10 +94,10 @@ gh pr create --title "[type](package): [description]" --body "$(cat <<'EOF'
 [2-3 bullets]
 
 ## Test Plan
-- [ ] Backend tests pass (pytest)
-- [ ] Frontend tests pass (Vitest)
-- [ ] E2E tests pass (Playwright)
-- [ ] Build succeeds
+- [ ] Mobile tests pass (jest-expo)
+- [ ] Bundle check passes (npx expo export)
+- [ ] Typecheck + lint clean
+- [ ] Manual: demo-critical flows verified in Expo Go on device
 - [feature-specific verification]
 
 Generated with Claude Code

@@ -40,8 +40,8 @@ You are a **dispatcher**. You read state, invoke commands, and report results.
 |---------|-------------|
 | `/research <feature>` | Gather requirements, analyze code |
 | `/plan <feature>` | Architecture + task breakdown |
-| `/implement <feature>` | Build it (TDD), delegates to frontend/backend agents |
-| `/test <feature>` | Full test suite + Playwright E2E |
+| `/implement <feature>` | Build it (TDD), delegates to specialist agents |
+| `/test <feature>` | Full test suite |
 | `/finalize <feature>` | Commit, PR, summary with retrospective |
 | `/diagnose <feature>` | Root cause analysis |
 | `/quickfix <desc>` | Small fix (< 3 files), test, done |
@@ -71,80 +71,65 @@ You are a **dispatcher**. You read state, invoke commands, and report results.
 5. **Never paste full file contents.** Summarize and reference by path.
 6. **If conversation exceeds ~50 exchanges**, write a session log to `.claude/active-work/<feature>/session-log.md` (what's done, what's in progress, any blockers), then suggest a new session.
 7. **Screenshots by path**, never embedded.
-8. **Feature names:** kebab-case, e.g. `wind-api`, `drift-preview`.
+8. **Feature names:** kebab-case, e.g. `commons-app`, `stipend-tracker`.
 9. **Branch names:** `feat/<name>`, `fix/<name>`, `refactor/<name>`.
 10. **If `.claude/ARCHITECTURE.md` exists**, agents MUST read it alongside CLAUDE.md. (Created when CLAUDE.md exceeds 150 lines.)
 
 ---
 
-## Project: Boreas
+## Project: Commons
 
-**boreas-web** — Wind-aware agricultural flight planning platform. Users draw farm field polygons, see real wind data, compute spray drift, generate wind-compensated flight paths, export waypoints to drones.
+**Commons** — the Shyft Solutions employee **mobile app** (iOS + Android). Announcements + office status, events with RSVP, stipend tracker, PTO + perks, people directory with kudos, Slack-channel discovery, and the preboarding/onboarding "Your first day" flow.
+
+**Design source of truth:** `docs/design/clarity-shyft-design-system/` — the Clarity design system handoff bundle. Agents MUST read its READMEs (root, `project/`, `project/ui_kits/commons/`) and chat transcripts before designing UI. Recreate the prototype faithfully; don't copy its internals.
+
+**Decisions log:** `docs/DECISIONS.md` — kickoff decisions (stack, scope, definition of done). Agents MUST read it.
 
 ### Tech Stack
-- **Frontend:** Next.js 14+ (App Router), Mapbox GL JS, Zustand, Tailwind, Vitest
-- **Backend:** FastAPI (Python 3.12+), SQLAlchemy + PostGIS, Redis, pytest
-- **Shared:** TypeScript types package (packages/shared)
-- **Physics:** TypeScript ballistic (Phase 1), Python Lagrangian (Phase 2), Rust PyO3+WASM (Phase 3)
-- **E2E:** Playwright
+- **Mobile:** Expo (React Native, managed workflow — **Expo Go compatible, no native modules**), expo-router, Zustand, TypeScript strict
+- **Design tokens:** Clarity → `lib/theme/` (from `colors_and_type.css`). Fonts via `@expo-google-fonts` (Sora, Inter, JetBrains Mono). Icons via `lucide-react-native`.
+- **Testing:** jest-expo + React Native Testing Library (unit/component). Maestro E2E = later phase.
+- **Data:** in-memory typed mock data via Zustand stores. No backend yet (FastAPI in `packages/api` is a later phase; keep the store seam clean for it).
 - **Monorepo:** pnpm workspaces + Turborepo
-- **Deploy:** Vercel (web) + Railway (api)
+- **Plugin ambition (architecture-shaping):** Shyft engineers will eventually build plugins. Every tab/screen/card is a self-contained feature module registered into the app shell. No monoliths.
 
 ### Commands
 ```bash
-pnpm install                    # Install all packages
-pnpm dev                        # Start all dev servers (turbo)
-docker compose up -d            # PostgreSQL + Redis
-cd packages/api && uvicorn boreas_api.main:app --reload --port 8000
-cd packages/web && pnpm dev     # http://localhost:3000
-pnpm test                       # All tests (turbo)
-pnpm lint                       # All linting (turbo)
-pnpm typecheck                  # TypeScript checks (turbo)
-cd packages/api && pytest       # Backend tests
-npx playwright test             # E2E tests
+pnpm install                      # Install all packages
+cd packages/mobile && npx expo start   # Dev server (scan QR with Expo Go)
+pnpm test                         # All tests (turbo)
+pnpm lint                         # All linting (turbo)
+pnpm typecheck                    # TypeScript checks (turbo)
+cd packages/mobile && pnpm test   # Mobile unit tests (jest-expo)
 ```
 
 ### Monorepo Structure
 ```
-boreas/
+SHYFT/
 ├── packages/
-│   ├── web/          # Next.js frontend
-│   │   ├── app/      # Routing only, no business logic
-│   │   ├── components/  # UI only (map/, panels/, ui/)
-│   │   └── lib/      # Logic (api/, drift/, stores/, utils/)
-│   ├── api/          # FastAPI backend
-│   │   └── boreas_api/
-│   │       ├── routers/    # Thin HTTP handlers
-│   │       ├── domain/     # Framework-agnostic business logic
-│   │       └── adapters/   # External service integrations
-│   ├── shared/       # TypeScript types (no runtime code)
-│   └── physics/      # Rust drift engine (Phase 3)
-├── docker-compose.yml
+│   ├── mobile/       # Expo app
+│   │   ├── app/      # expo-router routes ONLY, no business logic
+│   │   ├── features/ # Self-contained modules: today/ events/ you/ people/ more/ onboarding/
+│   │   ├── components/  # Shared UI primitives (Pill, Tag, Avatar, cards, sheets)
+│   │   ├── lib/      # theme/ (Clarity tokens), stores/ (Zustand), data/ (mocks)
+│   │   └── assets/   # s2-mark.png, images
+│   └── shared/       # (later) plugin SDK + shared types
+├── docs/design/      # Clarity design system handoff bundle
+├── docs/DECISIONS.md
 ├── turbo.json
 └── pnpm-workspace.yaml
 ```
 
 ### Key Conventions
-- **Frontend:** No barrel files. One component per file. `@/` alias. Zustand stores = single source of truth. `app/` routing only, `components/` UI only, `lib/` logic only.
-- **Backend:** Routers are thin. Domain is framework-agnostic. Ports/adapters pattern. All functions typed. Ruff for linting (line-length=100).
-- **All computation in SI units.** Conversion to display units only at UI boundary.
-- **API responses:** Return Pydantic models directly. Errors via HTTPException `{"detail": "..."}`.
-- **Commits:** `feat(web):`, `fix(api):`, `test(api):`, `docs:` — prefixed with package.
+- **No barrel files. One component per file.** `@/` alias to `packages/mobile/`.
+- **`app/` routes only, `features/` own their screens/cards/logic, `components/` shared UI only, `lib/` cross-cutting logic.** A feature module never imports from another feature module — shared things move to `components/` or `lib/`.
+- **Zustand stores = single source of truth.** No prop drilling beyond 2 levels. Stores are the future API + plugin seam.
+- **Styling:** RN `StyleSheet` with Clarity tokens from `lib/theme/`. No inline hex values — tokens only. Light theme (matches prototype).
+- **Clarity voice:** sentence case everywhere, "you", no hype-emoji (emoji ONLY as category-tag glyphs), dates like `Apr 1, 2027`, amounts/IDs in JetBrains Mono.
+- **Commits:** `feat(mobile):`, `fix(mobile):`, `test(mobile):`, `docs:` — prefixed with package.
+- **Git remote:** https://github.com/sgupta604/SHYFT.git
 
-### Wind Data Pipeline (Shyft/Folkweather OGC EDR)
-- Shyft primary (GFS 25km), Folkweather fallback (HRRR 3km US-only)
-- CRITICAL: Shyft area queries require `f=CoverageJSON_MultiPointSeries`
-- CRITICAL: Folkweather uses 0-360 longitude — normalize western hemisphere
-- CRITICAL: Shyft 1000 hPa → Internal Server Error, use surface collection
-- Redis cache TTL: 1 hour
-
-### Specs & Reference Docs
-Located in `docs/` at the repo root. Use clean filenames (no spaces or parens).
-- `docs/SPEC.md` — Full requirements and architecture decisions
-- `docs/IMPLEMENTATION-GUIDE.md` — Setup, file structure, patterns
-- `docs/` — Any additional research papers or reference material
-
-### Playwright
-- E2E tests: `packages/web/e2e/`
-- Screenshots/traces: `packages/web/test-results/` (gitignored, auto-managed)
-- Config: `packages/web/playwright.config.ts`
+### Demo-Critical Flows (test first, polish hardest)
+1. You → tap a stipend → StipendDetail (transactions, statuses, FAQ)
+2. Events → RSVP toggle updates count + capacity bar live
+3. More → "Your first day" → checkable onboarding list

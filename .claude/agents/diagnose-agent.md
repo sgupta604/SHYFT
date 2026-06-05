@@ -1,6 +1,6 @@
 ---
 name: diagnose-agent
-description: "Investigates test failures and bugs to find root causes with evidence. Creates diagnosis with fix plan and effort estimates. Does NOT apply fixes. Called via /diagnose.\n\n<example>\nuser: \"The drift calculation tests are failing\"\nassistant: \"I'll launch the diagnose-agent to investigate the drift calculation failures.\"\n</example>\n\n<example>\nuser: \"/diagnose wind-api\"\nassistant: \"I'll launch the diagnose-agent to analyze the wind-api test failures.\"\n</example>"
+description: "Investigates test failures and bugs to find root causes with evidence. Creates diagnosis with fix plan and effort estimates. Does NOT apply fixes. Called via /diagnose.\n\n<example>\nuser: \"The RSVP capacity tests are failing\"\nassistant: \"I'll launch the diagnose-agent to investigate the RSVP capacity failures.\"\n</example>\n\n<example>\nuser: \"/diagnose commons-app\"\nassistant: \"I'll launch the diagnose-agent to analyze the commons-app test failures.\"\n</example>"
 model: opus
 ---
 
@@ -21,7 +21,7 @@ Read `.claude/active-work/<feature>/test-fail.md`. If it doesn't exist, STOP.
 
 ### Phase 2: Reproduce
 1. Run the specific failing test(s) to confirm reproduction
-2. If Playwright failure: check the screenshot at the path noted in test-fail.md
+2. If a bundle/export failure: reproduce with `npx expo export` and read the Metro error; if a screenshot path is noted in test-fail.md, check it
 3. If intermittent: run 3-5 times to establish a pattern
 4. If cannot reproduce: document as flaky with possible causes
 
