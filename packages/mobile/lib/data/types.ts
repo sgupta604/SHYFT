@@ -186,3 +186,51 @@ export interface Onboarding {
   whoswho: WhosWho[];
   facts: OnboardingFact[];
 }
+
+/* ---- Plugins ---- */
+
+export type PluginSlotId = 'today' | 'you';
+
+export type PluginCategory =
+  | 'All'
+  | 'Workplace'
+  | 'Wellness'
+  | 'Finance'
+  | 'Productivity'
+  | 'Community';
+
+export type DevStatus = 'Published' | 'In review' | 'Draft' | 'Rejected';
+
+export type PluginWidgetSpec =
+  | { kind: 'next'; value: string; unit: string; label: string; note: string }
+  | { kind: 'list'; label: string; items: string[] }
+  | { kind: 'stat'; value: string; label: string; delta: string; deltaTone: Tone }
+  | { kind: 'progress'; label: string; used: number; total: number; unit: string };
+
+export interface Plugin {
+  id: string;
+  name: string;
+  dev: string;
+  icon: string;
+  tone: Tone;
+  category: PluginCategory;
+  slot: PluginSlotId;
+  installed: boolean;
+  installs: number;
+  rating: number | null;
+  blurb: string;
+  permissions: string[];
+  widget?: PluginWidgetSpec;
+}
+
+export interface DevPlugin {
+  id: string;
+  name: string;
+  icon: string;
+  tone: Tone;
+  status: DevStatus;
+  version: string;
+  installs: number;
+  rating: number | null;
+  note: string;
+}
